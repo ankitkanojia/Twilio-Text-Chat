@@ -1,0 +1,38 @@
+{
+  "name": "reacttwilliotextchat",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.19.2",
+    "bootstrap": "^4.4.1",
+    "concurrently": "^5.1.0",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.4",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-loader-spinner": "^3.1.5",
+    "react-scripts": "3.2.0",
+    "react-toasts": "^3.0.6",
+    "twilio": "^3.36.0"
+  },
+  "scripts": {
+    "client": "react-scripts start",
+    "server": "nodemon server.js",
+    "start": "concurrently --kill-others-on-fail \"yarn client\""
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
