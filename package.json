@@ -1,39 +1,33 @@
 {
   "name": "reacttwilliotextchat",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "axios": "^0.19.2",
-    "faker": "^4.1.0",
-    "bootstrap": "^4.4.1",
-    "concurrently": "^5.1.0",
-    "dotenv": "^4.0.0",
-    "express": "^4.15.4",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-loader-spinner": "^3.1.5",
-    "react-scripts": "3.2.0",
-    "react-toasts": "^3.0.6",
-    "twilio": "^3.36.0"
-  },
+  "version": "1.0.0",
+  "description": "A video chat app using React JS and Twilio Video",
+  "main": "index.js",
   "scripts": {
     "client": "react-scripts start",
     "server": "nodemon server.js",
     "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "keywords": [
+    "react",
+    "twilio",
+    "twilio-chat"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "classnames": "^2.2.5",
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-scripts": "^1.0.11",
+    "axios": "^0.19.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "faker": "^4.1.0",
+    "material-ui": "^0.20.0",
+    "react-router-dom": "^4.2.2",
+    "react-tap-event-plugin": "^3.0.2",
+    "twilio": "^3.11.0"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "proxy": "http://localhost:3001"
 }
