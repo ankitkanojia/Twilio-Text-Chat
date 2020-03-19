@@ -116,6 +116,7 @@ class App extends Component {
   render() {
     return (
       <div className="wrap">
+        <a target="_blank" href="https://github.com/ankitkanojia/twillio_videochat"><img className="githubribbon attachment-full size-full" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_green_007200.png?resize=149%2C149" alt="Fork me on GitHub" data-recalc-dims="1" /></a>
         <section className="left">
           <div className="profile">
             <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1089577/user.jpg" /> {this.state.username}
