@@ -8,11 +8,14 @@ class App extends Component {
       messages: [],
       username: null,
       channel: null,
-      onlineuser: []
+      onlineuser: [],
+      isDisabled : true
     }
   }
 
   componentDidMount = () => {
+    document.body.addEventListener('keypress', this.handleNewMessage);
+
     this.getToken().then(this.createChatClient)
       .then(this.joinGeneralChannel)
       .then(this.configureChannelEvents)
@@ -53,6 +56,9 @@ class App extends Component {
 
           channel.join().then(() => {
             this.addMessage({ body: `Joined general channel as ${this.state.username}` })
+            this.setState({
+              isDisabled : false
+            });
             window.addEventListener('beforeunload', () => channel.leave())
           }).catch(() => reject(Error('Could not join general channel.')))
 
@@ -88,7 +94,6 @@ class App extends Component {
 
     channel.on('memberJoined', (member) => {
       console.log('memberJoined');
-      this.props.addUser(member.identity);
       this.addMessage({ body: `${member.identity} has joined the channel.` })
     })
 
@@ -104,9 +109,10 @@ class App extends Component {
     })
   }
 
-  handleNewMessage = (text) => {
-    if (this.state.channel) {
-      this.state.channel.sendMessage(text)
+  handleNewMessage = () => {
+    const message = this.refs["txtmsg"].value;
+    if (message && message.length > 0 && this.state.channel) {
+      this.state.channel.sendMessage(message)
     }
   }
 
@@ -117,24 +123,41 @@ class App extends Component {
         <section className="right">
           <div className="wrap-chat">
             <div className="chat">
-              <div class="chat-bubble me">
+              {this.state.messages && this.state.messages.map((data,index) => {
+                if (data.author === this.state.username) {
+                  return (
+                    <div class="chat-bubble me" key={index}>
+                      <div class="my-mouth"></div>
+                      <div class="content">{data.body}</div>
+                    </div>
+                  )
+                } else {
+                  return (
+                    <div class="chat-bubble you" key={index}>
+                      <div class="your-mouth"></div>
+                      <h4>{data.author}</h4>
+                      <div class="content">{data.body}</div>
+                    </div>
+                  )
+                }
+              })}
+              {/* <div class="chat-bubble me">
                 <div class="my-mouth"></div>
                 <div class="content">Hallo :) Mir gehts auch gut. Kaffee trinken geht bei mir morgen leider nicht, weil bin noch bis Freitag in Hagenberg :(
                   </div>
-                {/* <div class="time">17:48</div> */}
               </div>
               <div class="chat-bubble you">
                 <div class="your-mouth"></div>
                 <h4>Linda Gahleitner</h4>
                 <div class="content">Hallo! Wie gehts euch?</div>
-              </div>
+              </div> */}
             </div>
           </div>
-          <div className="wrap-message">
+          <div className={"wrap-message " + (this.state.isDisabled && "disableMessanger")}>
             <div className="message">
-              <input type="text" className="input-message" placeholder="Send Message..." />
+              <input disabled={this.state.isDisabled} ref="txtmsg" type="text" className="input-message" placeholder="Send Message..." />
             </div>
-            <i onClick={this.getUsers} style={{ color: "green", fontSize: "x-large" }} className="fa fa-paper-plane" aria-hidden="true"></i>
+            <i onClick={() => this.handleNewMessage} className="fa fa-paper-plane sendIcon" aria-hidden="true"></i>
           </div>
         </section>
       </div>
