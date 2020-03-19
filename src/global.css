@@ -230,7 +230,7 @@ margin: auto;
 
 .chat {
   background-color: #e5ddd5;
-  background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1089577/background.png);
+  background-image: url("./background.png");
   width: 100%;
   padding: 0px 2%;
   padding-top: 7px;
