@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import $ from 'jquery'
-import TwilioChat from 'twilio-chat'
-
+import TwilioChat from 'twilio-chat';
 class App extends Component {
   constructor(props) {
     super(props)
@@ -19,7 +18,11 @@ class App extends Component {
       .then(this.configureChannelEvents)
       .catch((error) => {
         this.addMessage({ body: `Error: ${error.message}` })
-      })
+      });
+  }
+
+  getUsers =() =>{
+    this.props.getOnlineUsers();
   }
 
   getToken = () => {
@@ -53,14 +56,6 @@ class App extends Component {
             window.addEventListener('beforeunload', () => channel.leave())
           }).catch(() => reject(Error('Could not join general channel.')))
 
-          chatClient.getPublicChannelDescriptors().then(function(paginator) {
-            console.log('called afte joined');
-            for (var i = 0; i < paginator.items.length; i++) {
-              const channel = paginator.items[i];
-              console.log('Channel: ' + channel.friendlyName);
-            }
-          });
-
           resolve(channel)
         }).catch(() => this.createGeneralChannel(chatClient));
       }).catch(() => reject(Error('Could not get channel list.')))
@@ -79,11 +74,11 @@ class App extends Component {
 
   configureChannelEvents = (channel) => {
 
-    channel.on('typingStarted', function(member) {
+    channel.on('typingStarted', function (member) {
       console.log(member.identity + 'is currently typing.');
     });
     // Listen for members typing
-    channel.on('typingEnded', function(member) {
+    channel.on('typingEnded', function (member) {
       console.log(member.identity + 'has stopped typing.');
     });
 
@@ -92,6 +87,8 @@ class App extends Component {
     })
 
     channel.on('memberJoined', (member) => {
+      console.log('memberJoined');
+      this.props.addUser(member.identity);
       this.addMessage({ body: `${member.identity} has joined the channel.` })
     })
 
@@ -117,42 +114,27 @@ class App extends Component {
     return (
       <div className="wrap">
         <a target="_blank" href="https://github.com/ankitkanojia/Twilio_TextChat"><img className="githubribbon attachment-full size-full" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_green_007200.png?resize=149%2C149" alt="Fork me on GitHub" data-recalc-dims="1" /></a>
-        <section className="left">
-          <div className="profile">
-            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1089577/user.jpg" /> {this.state.username}
-            <div className="icons">
-              <i className="fa fa-sign-out" aria-hidden="true"></i>
-            </div>
-          </div>
-          <div className="contact-list">
-            {this.state.onlineuser &&
-              this.state.onlineuser.map((data, index) => {
-                return (<div className="contact" id={index}>
-                  <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1089577/contact7.JPG" alt="profilpicture" />
-                  <div className="contact-preview">
-                    <div className="contact-text">
-                      <h1 className="font-name">{data}</h1>
-                    </div>
-                  </div>
-                  <div className="contact-time"><p>&nbsp;</p></div>
-                </div>
-                )
-              })
-            }
-          </div>
-        </section>
-
         <section className="right">
-
           <div className="wrap-chat">
-            <div className="chat"></div>
-            <div className="information"></div>
+            <div className="chat">
+              <div class="chat-bubble me">
+                <div class="my-mouth"></div>
+                <div class="content">Hallo :) Mir gehts auch gut. Kaffee trinken geht bei mir morgen leider nicht, weil bin noch bis Freitag in Hagenberg :(
+                  </div>
+                {/* <div class="time">17:48</div> */}
+              </div>
+              <div class="chat-bubble you">
+                <div class="your-mouth"></div>
+                <h4>Linda Gahleitner</h4>
+                <div class="content">Hallo! Wie gehts euch?</div>
+              </div>
+            </div>
           </div>
           <div className="wrap-message">
             <div className="message">
               <input type="text" className="input-message" placeholder="Send Message..." />
             </div>
-            <i style={{ color: "green", fontSize: "x-large" }} className="fa fa-paper-plane" aria-hidden="true"></i>
+            <i onClick={this.getUsers} style={{ color: "green", fontSize: "x-large" }} className="fa fa-paper-plane" aria-hidden="true"></i>
           </div>
         </section>
       </div>
@@ -160,4 +142,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default App
