@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import $ from 'jquery'
 import TwilioChat from 'twilio-chat';
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -14,7 +15,7 @@ class App extends Component {
   }
 
   componentDidMount = () => {
-    document.body.addEventListener('keypress', this.handleNewMessage);
+    document.body.addEventListener('keypress', this.handleEnter);
 
     this.getToken().then(this.createChatClient)
       .then(this.joinGeneralChannel)
@@ -30,7 +31,7 @@ class App extends Component {
 
   getToken = () => {
     return new Promise((resolve, reject) => {
-      this.addMessage({ body: 'Connecting...' })
+      this.addMessage({ body: 'Wait Its Connecting...' })
 
       $.getJSON('/token', (token) => {
         this.setState({ username: token.identity })
@@ -51,11 +52,11 @@ class App extends Component {
     return new Promise((resolve, reject) => {
       chatClient.getSubscribedChannels().then(() => {
         chatClient.getChannelByUniqueName('general').then((channel) => {
-          this.addMessage({ body: 'Joining general channel...' })
+          this.addMessage({ body: 'Joining channel...' })
           this.setState({ channel })
 
           channel.join().then(() => {
-            this.addMessage({ body: `Joined general channel as ${this.state.username}` })
+            this.addMessage({ body: `Join channel as ${this.state.username}` })
             this.setState({
               isDisabled : false
             });
@@ -80,13 +81,16 @@ class App extends Component {
 
   configureChannelEvents = (channel) => {
 
-    channel.on('typingStarted', function (member) {
-      console.log(member.identity + 'is currently typing.');
-    });
-    // Listen for members typing
-    channel.on('typingEnded', function (member) {
-      console.log(member.identity + 'has stopped typing.');
-    });
+    // channel.on('typingStarted', function (member) {
+    //   console.log(member.identity + 'is currently typing.');
+    //   this.addMessage({ body: `${member.identity} is currently typing.` })
+    // });
+
+    // // Listen for members typing
+    // channel.on('typingEnded', function (member) {
+    //   console.log(member.identity + 'has stopped typing.');
+    //   this.addMessage({ body: `${member.identity} has stopped typing.` })
+    // });
 
     channel.on('messageAdded', ({ author, body }) => {
       this.addMessage({ author, body })
@@ -109,10 +113,18 @@ class App extends Component {
     })
   }
 
+  handleEnter = (e) => {
+    if(e.key === "Enter" || e.keyCode === 13)
+    {
+      this.handleNewMessage();
+    }
+  }
+
   handleNewMessage = () => {
     const message = this.refs["txtmsg"].value;
     if (message && message.length > 0 && this.state.channel) {
-      this.state.channel.sendMessage(message)
+      this.state.channel.sendMessage(message);
+      this.refs["txtmsg"].value = "";
     }
   }
 
@@ -157,7 +169,7 @@ class App extends Component {
             <div className="message">
               <input disabled={this.state.isDisabled} ref="txtmsg" type="text" className="input-message" placeholder="Send Message..." />
             </div>
-            <i onClick={() => this.handleNewMessage} className="fa fa-paper-plane sendIcon" aria-hidden="true"></i>
+            <i onClick={this.handleNewMessage} className="fa fa-paper-plane sendIcon" aria-hidden="true"></i>
           </div>
         </section>
       </div>
